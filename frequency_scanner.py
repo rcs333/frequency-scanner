@@ -82,18 +82,22 @@ if __name__ == '__main__':
 	parser.add_argument('reference_fasta', help='You need a reference fasta to align all your reads to. For best results this should be the majority consensus. Although you will get decent output so long as your input reads can align to this file')
 	parser.add_argument('-qual', help='Specify a qualtiy filter, any read that has any base with a quality score lower than this will be completely removed. Default: 34')
 	parser.add_argument('-af', help='Mutations with a frequency greater than this will not be counted')
+	parser.add_argument('-gen_len', help='Per genome adjustment, default 10,000')
 
 	args = parser.parse_args()
 
 	if args.qual:
-		qual = args.qual
+		qual = int(args.qual)
 	else:
 		qual = 34
 	if args.af:
-		af = args.af
+		af = float(args.af)
 	else:
 		af = 0.05
-
+	if args.gen_len:
+		gen_len = float(args.gen_len)
+	else:
+		gen_len = 10000.0
 	ref_fasta = args.reference_fasta
 	subprocess.call('bwa index ' + ref_fasta, shell=True)
 
@@ -142,45 +146,45 @@ if __name__ == '__main__':
 			
 			if temp_ref == 'A':
 				a_count += temp_a_count
-				if temp_t_count / temp_dp <= 0.05:
+				if temp_t_count / temp_dp <= af:
 					a_to_t += temp_t_count
-				if temp_c_count / temp_dp <= 0.05:
+				if temp_c_count / temp_dp <= af:
 					a_to_c += temp_c_count
-				if temp_g_count / temp_dp <= 0.05:
+				if temp_g_count / temp_dp <= af:
 					a_to_g += temp_g_count
 
 			elif temp_ref == 'C':
 				c_count += temp_c_count
-				if temp_a_count / temp_dp <= 0.05:
+				if temp_a_count / temp_dp <= af:
 					c_to_a += temp_a_count
-				if temp_t_count / temp_dp <= 0.05:
+				if temp_t_count / temp_dp <= af:
 					c_to_t += temp_t_count
-				if temp_g_count / temp_dp <= 0.05:
+				if temp_g_count / temp_dp <= af:
 					c_to_g += temp_g_count
 
 			elif temp_ref == 'G':
 				g_count += temp_g_count
-				if temp_a_count / temp_dp <= 0.05:
+				if temp_a_count / temp_dp <= af:
 					g_to_a += temp_a_count
-				if temp_c_count / temp_dp <= 0.05:
+				if temp_c_count / temp_dp <= af:
 					g_to_c += temp_c_count
-				if temp_t_count / temp_dp <= 0.05:
+				if temp_t_count / temp_dp <= af:
 					g_to_t += temp_t_count
 
 			elif temp_ref == 'T':
 				t_count += temp_t_count
-				if temp_a_count / temp_dp <= 0.05:
+				if temp_a_count / temp_dp <= af:
 					t_to_a += temp_a_count
-				if temp_c_count / temp_dp <= 0.05:
+				if temp_c_count / temp_dp <= af:
 					t_to_c += temp_c_count
-				if temp_g_count / temp_dp <= 0.05:
+				if temp_g_count / temp_dp <= af:
 					t_to_g += temp_g_count
 
 
 		total = a_count + c_count + t_count + g_count# + a_to_c + a_to_t + a_to_g + c_to_a + c_to_t + c_to_g + t_to_a + t_to_c + t_to_g + g_to_a + g_to_c + g_to_t
 		print('Total Bases counted: ' + str(total))
 		if total != 0:
-			total = total / 10000.0
+			total = total / gen_len
 		else:
 			total = 1
 
