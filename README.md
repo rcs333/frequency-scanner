@@ -1,5 +1,5 @@
 # frequency-scanner
-Reports frequency of all single nucleotide changes for a group of fastq files 
+Reports frequency of all possible permutations of single nucleotide changes for a group of fastq files. Counts every minor variant below a certain frequency of each fastq as mapped against a provided fasta file. 
 
 # Dependencies
 This program requires that you have the following programs installed and working on your path
