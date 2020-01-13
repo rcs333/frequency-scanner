@@ -81,7 +81,7 @@ if __name__ == '__main__':
 	parser = argparse.ArgumentParser(description='Frequency Scanner is used to calculate relative frequencies nucleotide transitions and transversions of low frequency random mutations. Takes a reference fasta and aligns all fasta files in the working directory to the reference and calculates mutational frequeinces based off this. If you are using paired end reads you need to have them fully merged at input.')
 	parser.add_argument('reference_fasta', help='You need a reference fasta to align all your reads to. For best results this should be the majority consensus. Although you will get decent output so long as your input reads can align to this file')
 	parser.add_argument('-qual', help='Specify a qualtiy filter, any read that has any base with a quality score lower than this will be completely removed. Default: 34')
-	parser.add_argument('-af', help='Mutations with a frequency greater than this will not be counted')
+	parser.add_argument('-af', help='Mutations with a frequency greater than this will not be counted. Default 0.05')
 	parser.add_argument('-gen_len', help='Per genome adjustment, default 10,000')
 
 	args = parser.parse_args()
